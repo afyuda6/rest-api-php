@@ -115,7 +115,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
         default:
             header('Content-Type: application/json');
             echo json_encode([
-                'status' => 'Method not allowed',
+                'status' => 'Method Not Allowed',
                 'code' => 405
             ]);
             break;
