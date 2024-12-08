@@ -6,8 +6,9 @@ require_once __DIR__ . '/../database/sqlite.php';
 header("Content-Type: application/json");
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
+if (!preg_match('#^/users/?$#', $requestUri)) {
     header("Content-Type: application/json");
+    http_response_code(404);
     echo json_encode([
         'status' => 'Not Found',
         'code' => 404
@@ -17,6 +18,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
         global $db;
         $stmt = $db->query("SELECT * FROM users");
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode([
             'status' => 'OK',
             'code' => 200,
@@ -27,6 +29,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
     function handleCreateUser($data) {
         if (!isset($data['name'])) {
             header('Content-Type: application/json');
+            http_response_code(400);
             echo json_encode([
                 'status' => 'Bad Request',
                 'code' => 400,
@@ -39,6 +42,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
             $stmt->bindParam(':name', $name);
             $stmt->execute();
             header('Content-Type: application/json');
+            http_response_code(201);
             echo json_encode([
                 'status' => 'Created',
                 'code' => 201
@@ -49,6 +53,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
     function handleUpdateUser($data) {
         if (!isset($data['name']) || !isset($data['id'])) {
             header('Content-Type: application/json');
+            http_response_code(400);
             echo json_encode([
                 'status' => 'Bad Request',
                 'code' => 400,
@@ -63,6 +68,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             header('Content-Type: application/json');
+            http_response_code(200);
             echo json_encode([
                 'status' => 'OK',
                 'code' => 200
@@ -73,6 +79,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
     function handleDeleteUser($data) {
         if (!isset($data['id'])) {
             header('Content-Type: application/json');
+            http_response_code(400);
             echo json_encode([
                 'status' => 'Bad Request',
                 'code' => 400,
@@ -85,6 +92,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
             $stmt->bindParam(':id', $id);
             $stmt->execute();
             header('Content-Type: application/json');
+            http_response_code(200);
             echo json_encode([
                 'status' => 'OK',
                 'code' => 200
@@ -114,6 +122,7 @@ if (!preg_match('#^/users(/.*)?$#', $requestUri)) {
 
         default:
             header('Content-Type: application/json');
+            http_response_code(405);
             echo json_encode([
                 'status' => 'Method Not Allowed',
                 'code' => 405
