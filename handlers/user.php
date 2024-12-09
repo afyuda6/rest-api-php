@@ -27,7 +27,7 @@ if (!preg_match('#^/users/?$#', $requestUri)) {
     }
 
     function handleCreateUser($data) {
-        if (trim($data['name']) === '') {
+        if (!isset($data['name']) || trim($data['name']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
             echo json_encode([
@@ -51,7 +51,7 @@ if (!preg_match('#^/users/?$#', $requestUri)) {
     }
 
     function handleUpdateUser($data) {
-        if (trim($data['name']) === '' || trim($data['id']) === '') {
+        if (!isset($data['name']) || trim($data['name']) === '' || !isset($data['id']) || trim($data['id']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
             echo json_encode([
@@ -77,7 +77,7 @@ if (!preg_match('#^/users/?$#', $requestUri)) {
     }
 
     function handleDeleteUser($data) {
-        if (trim($data['id']) === '') {
+        if (!isset($data['id']) || trim($data['id']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
             echo json_encode([
