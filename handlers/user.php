@@ -6,14 +6,7 @@ require_once __DIR__ . '/../database/sqlite.php';
 header("Content-Type: application/json");
 
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-if (!preg_match('#^/users/?$#', $requestUri)) {
-    header("Content-Type: application/json");
-    http_response_code(404);
-    echo json_encode([
-        'status' => 'Not Found',
-        'code' => 404
-    ]);
-} else {
+if (preg_match('#^/users/?$#', $requestUri)) {
     function handleReadUsers() {
         global $db;
         $stmt = $db->query("SELECT * FROM users");
@@ -99,27 +92,21 @@ if (!preg_match('#^/users/?$#', $requestUri)) {
             ]);
         }
     }
-
     $method = $_SERVER['REQUEST_METHOD'];
     parse_str(file_get_contents('php://input'), $data);
-
     switch ($method) {
         case 'GET':
             handleReadUsers();
             break;
-
         case 'POST':
             handleCreateUser($data);
             break;
-
         case 'PUT':
             handleUpdateUser($data);
             break;
-
         case 'DELETE':
             handleDeleteUser($data);
             break;
-
         default:
             header('Content-Type: application/json');
             http_response_code(405);
@@ -129,4 +116,11 @@ if (!preg_match('#^/users/?$#', $requestUri)) {
             ]);
             break;
     }
+} else {
+    header("Content-Type: application/json");
+    http_response_code(404);
+    echo json_encode([
+        'status' => 'Not Found',
+        'code' => 404
+    ]);
 }
