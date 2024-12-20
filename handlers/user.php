@@ -10,12 +10,16 @@ if (preg_match('#^/users/?$#', $requestUri)) {
     function handleReadUsers() {
         global $db;
         $stmt = $db->query("SELECT * FROM users");
+        $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($users as &$user) {
+            $user['id'] = (int) $user['id'];
+        }
         header('Content-Type: application/json');
         http_response_code(200);
         echo json_encode([
             'status' => 'OK',
             'code' => 200,
-            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)
+            'data' => $users
         ]);
     }
 
