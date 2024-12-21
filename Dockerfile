@@ -1,12 +1,8 @@
-FROM ubuntu:20.04
+FROM php:8.1-cli
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    php \
-    php-cli \
-    php-pdo \
-    php-sqlite3 \
-    php-json \
+    sqlite3 \
     curl \
     && apt-get clean
 
