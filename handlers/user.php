@@ -2,25 +2,23 @@
 
 define('RESET_DATABASE', false);
 require_once __DIR__ . '/../database/sqlite.php';
-
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
-
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
 }
-
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 if (preg_match('#^/users/?$#', $requestUri)) {
-    function handleReadUsers() {
+    function handleReadUsers()
+    {
         global $db;
         $stmt = $db->query("SELECT * FROM users");
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($users as &$user) {
-            $user['id'] = (int) $user['id'];
+            $user['id'] = (int)$user['id'];
         }
         header('Content-Type: application/json');
         http_response_code(200);
@@ -31,7 +29,8 @@ if (preg_match('#^/users/?$#', $requestUri)) {
         ]);
     }
 
-    function handleCreateUser($data) {
+    function handleCreateUser($data)
+    {
         if (!isset($data['name']) || trim($data['name']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
@@ -55,7 +54,8 @@ if (preg_match('#^/users/?$#', $requestUri)) {
         }
     }
 
-    function handleUpdateUser($data) {
+    function handleUpdateUser($data)
+    {
         if (!isset($data['name']) || trim($data['name']) === '' || !isset($data['id']) || trim($data['id']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
@@ -81,7 +81,8 @@ if (preg_match('#^/users/?$#', $requestUri)) {
         }
     }
 
-    function handleDeleteUser($data) {
+    function handleDeleteUser($data)
+    {
         if (!isset($data['id']) || trim($data['id']) === '') {
             header('Content-Type: application/json');
             http_response_code(400);
@@ -104,6 +105,7 @@ if (preg_match('#^/users/?$#', $requestUri)) {
             ]);
         }
     }
+
     $method = $_SERVER['REQUEST_METHOD'];
     parse_str(file_get_contents('php://input'), $data);
     switch ($method) {
