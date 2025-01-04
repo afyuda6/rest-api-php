@@ -3,8 +3,7 @@ FROM php:8.1-cli
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     sqlite3 \
-    curl \
-    && apt-get clean
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /rest-api-php
 
